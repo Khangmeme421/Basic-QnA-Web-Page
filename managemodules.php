@@ -5,9 +5,8 @@ include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
 $nav = nav();
 ob_start();
-if ($_SESSION['role']!='admin'){
-    include 'layouts/redirect.html.php';
-}
+if ($_SESSION['role']!='admin')
+    header("Location: index.php");
 include 'layouts/mngmodules.html.php';
 if (isset($_POST['module'])){
     $name = $_POST['module'];

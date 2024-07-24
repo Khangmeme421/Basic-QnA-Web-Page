@@ -4,6 +4,9 @@ session_start();
 include 'includes/dbfunctions.php';
 $nav = nav();
 include 'includes/DatabaseConnection.php';
+if ($_SESSION['role']!='admin'){
+    header("Location: index.php")
+}
 ob_start();
 if (isset($_POST['id']) && isset($_POST['iduser'])) {
     $id = $_POST['id'];

@@ -44,7 +44,14 @@ if (!isset($_SESSION['userid'])) {
             ];
             $stmt = $pdo->prepare("INSERT INTO questions (title, content, idsubject, iduser, date_create) VALUES (:title, :content, :idsubject, :iduser, :date_create)");
             $stmt->execute($data);
-            echo "New record created successfully";
+            echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
+                        Your post created successfully
+                    </div>
+                    <script>
+                        setTimeout(function() {
+                            document.getElementById("alert").remove();
+                        }, 4000);
+                    </script>';
         }
     }catch (PDOException $e){
         $output= 'Database error: ' . $e->getMessage();
