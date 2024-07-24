@@ -24,25 +24,32 @@ if (!isset($_SESSION['userid'])) {
             $user_id = $_SESSION['userid'];
             $date = date('Y-m-d H:i:s');
                 // Handle file upload
+            /*
             $img = $_FILES['img'];
             $img_tmp = $img['tmp_name'];
             $img_name = $img['name'];
             $img_type = $img['type'];
             $img_size = $img['size'];
+            */
 
+            include 'includes/uploadFile.php';
             // Check if the file is an image
+            /*
             if ($img_type == 'image/jpeg' || $img_type == 'image/png' || $img_type == 'image/gif') {
                 // Store the image data in the content column
                 $content = addslashes(file_get_contents($img_tmp));
-            } 
+            }
+            */
+            $image_path = '../uploads/' . basename($_FILES["fileToUpload"]["name"]);
             $data = [
                 'title' => $title,
                 'content' => $content,
                 'idsubject' => $subject_id,
                 'iduser' => $user_id,
-                'date_create' => $date
+                'date_create' => $date,
+                'image' => $image_path
             ];
-            $stmt = $pdo->prepare("INSERT INTO questions (title, content, idsubject, iduser, date_create) VALUES (:title, :content, :idsubject, :iduser, :date_create)");
+            $stmt = $pdo->prepare("INSERT INTO questions (title, content, idsubject, iduser, date_create, image) VALUES (:title, :content, :idsubject, :iduser, :date_create, :image)");
             $stmt->execute($data);
             echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         Your post created successfully

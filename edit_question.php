@@ -1,7 +1,9 @@
 <?php
 $title = 'Edit Question';
 session_start();
-include 'includes/nav.php';
+include 'includes/DatabaseConnection.php';
+include 'includes/dbfunctions.php';
+$nav = nav();
 ob_start();
 
 // Retrieve the question data from the database using the ID
@@ -28,19 +30,6 @@ if (isset($_POST['qtitle'])){
     $subject_id = $_POST['subject'];
     $user_id = $_SESSION['userid'];
     $date = date('Y-m-d H:i:s');
-        // Handle file upload
-    $img = $_FILES['img'];
-    $img_tmp = $img['tmp_name'];
-    $img_name = $img['name'];
-    $img_type = $img['type'];
-    $img_size = $img['size'];
-
-
-    // Check if the file is an image
-    if ($img_type == 'image/jpeg' || $img_type == 'image/png' || $img_type == 'image/gif') {
-        // Store the image data in the content column
-        $content = addslashes(file_get_contents($img_tmp));
-    } 
     $data = [
         'title' => $title,
         'content' => $content,
@@ -62,8 +51,6 @@ if (isset($_POST['qtitle'])){
         </script>';
 }
 // Populate the form fields with the existing data
-?>
-<?php
 $output = ob_get_clean();
 include 'layouts/index.html.php';
 ?>
