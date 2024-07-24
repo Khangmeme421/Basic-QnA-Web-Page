@@ -29,7 +29,6 @@ if(!isset($_SESSION['userid'])){
             echo '    <div class="card-header">';
             echo '<a class="link-opacity-50-hover text-decoration-none float-start" href="index.php?subid='.htmlspecialchars($row['idsubject']).'">'.htmlspecialchars($row['subject_name']).'</a>';
             echo '<div class="float-end">';
-            //echo '<a class="link-opacity-50-hover text-decoration-none" href="#">'.'Edit'.'</a>';
             echo '<a class="link-opacity-50-hover text-decoration-none" href="edit_question.php?id='.htmlspecialchars($row['id']).'">Edit</a>';
             echo '<form action="" method="post" class="d-inline ms-3">
                     <input type="hidden" name="id" value="'.htmlspecialchars($row['id']).'">

@@ -20,7 +20,6 @@ if (isset($_GET['id'])){
     include 'includes/subjects.php';
     $sub = ob_get_clean();
 
-
     include 'layouts/ask.html.php';
 }
 if (isset($_POST['qtitle'])){
@@ -53,7 +52,14 @@ if (isset($_POST['qtitle'])){
     $stmt = $pdo->prepare("UPDATE questions SET title = :title, content = :content, idsubject = :idsubject, iduser = :iduser, date_create = :date_create WHERE id = :id");
     //array_merge is new need to be ref in the report.
     $stmt->execute(array_merge($data, ['id' => $id]));
-    echo "New record created successfully";
+    echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
+                Your question is updated
+        </div>
+        <script>
+            setTimeout(function() {
+                document.getElementById("alert").remove();
+            }, 4000);
+        </script>';
 }
 // Populate the form fields with the existing data
 ?>

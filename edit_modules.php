@@ -6,12 +6,11 @@ include 'includes/dbfunctions.php';
 $nav = nav();
 ob_start();
 if ($_SESSION['role']!='admin'){
-    include 'layouts/redirect.html.php';
+    header("Location: index.php");
 }
 $butt = 'Update';
 if (isset($_GET['id'])){
     try{
-        
         $sql = 'SELECT * FROM `subject` WHERE id='.$_GET['id'];
         $subjects = $pdo->query($sql);
         foreach ($subjects as $subject){
@@ -35,10 +34,19 @@ if (isset($_POST['module'])){
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':id', $_GET['id']);
         $stmt->execute();
-        echo "New record created successfully";
+        echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
+                        New subject created successfully
+                    </div>';
     }else{
-        echo "Subject already exist";
+        echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
+                        Subject already exist
+                    </div>';
     }
+    echo '<script>
+            setTimeout(function() {
+                document.getElementById("alert").remove();
+            }, 4000);
+        </script>';
 }
 $output = ob_get_clean();
 include 'layouts/index.html.php';

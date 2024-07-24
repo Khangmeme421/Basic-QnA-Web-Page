@@ -19,11 +19,19 @@ if (isset($_POST['module'])){
         $stmt = $pdo->prepare("INSERT INTO `subject` SET `sub_name` = :name");
         $stmt->bindParam(':name', $name);
         $stmt->execute();
-        echo "New record created successfully";
-        header('location: managemodules.php');
+        echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 ms-5" role="alert" style="max-width: 18rem;" id="alert">
+                New subject created successfully
+                    </div>';
     }else{
-        echo "Subject already exist";
+        echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 ms-5" role="alert" style="max-width: 18rem;" id="alert">
+                        Subject already exists
+                    </div>';
     }
+    echo '<script>
+            setTimeout(function() {
+                document.getElementById("alert").remove();
+            }, 4000);
+        </script>';
 }
 if (isset($_POST['id'])) {
     $id = htmlspecialchars($_POST['id']);

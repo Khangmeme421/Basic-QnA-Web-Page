@@ -1,6 +1,7 @@
 <?php
 $title = 'Add Account';
 session_start();
+include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
 $nav = nav();
 ob_start();
@@ -35,7 +36,14 @@ if($_SESSION['role']=='admin'){
                 header('Location: ' . $_SERVER['PHP_SELF']. '?success=true');
                 exit;
             }else{
-                echo "this username already exist";
+                echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
+                        Username or Email existed
+                    </div>
+                    <script>
+                        setTimeout(function() {
+                            document.getElementById("alert").remove();
+                        }, 4000);
+                    </script>';
             }
         }
     } catch (PDOException $e) {

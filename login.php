@@ -38,7 +38,14 @@ if(empty($_SESSION['userid'])){
                 $_SESSION['username'] = $user_name;
                 header("Location: index.php");
             } else {
-                echo "<p>". "Invalid login details". "</p>";
+                echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
+                        Invalid login details
+                    </div>
+                    <script>
+                        setTimeout(function() {
+                            document.getElementById("alert").remove();
+                        }, 4000);
+                    </script>';
             }
         } catch (PDOException $e) {
             $output = 'Database error: '. $e->getMessage();

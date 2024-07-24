@@ -6,9 +6,7 @@ include 'includes/dbfunctions.php';
 $nav = nav();
 
 if (!isset($_SESSION['userid'])) {
-    ob_start();
-    include 'layouts/redirect.html.php';
-    $output = ob_get_clean();
+    header("Location: index.php");
 }else{
     
     //include 'includes/subjects.php';
@@ -31,7 +29,6 @@ if (!isset($_SESSION['userid'])) {
             $img_name = $img['name'];
             $img_type = $img['type'];
             $img_size = $img['size'];
-
 
             // Check if the file is an image
             if ($img_type == 'image/jpeg' || $img_type == 'image/png' || $img_type == 'image/gif') {

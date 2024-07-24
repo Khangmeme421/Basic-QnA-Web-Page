@@ -77,7 +77,6 @@ if (isset($_GET['subid'])) {
     displayPosts($pdo, $_GET['subid']);
 } else {
     displayPosts($pdo);
-}
-//include 'layouts/problems.html.php';  
+} 
 $output = ob_get_clean();
 include 'layouts/index.html.php';
