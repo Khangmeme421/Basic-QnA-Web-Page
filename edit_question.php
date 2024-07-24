@@ -17,10 +17,11 @@ if (isset($_GET['id'])){
     $qtitle = htmlspecialchars($row['title']);
     $qcontent = htmlspecialchars($row['content']);
     $qsubmit = htmlspecialchars('Update');
+    $imgsrc = $row['image'];
+
     //Retrieve subjects name from database
     ob_start();
-    include 'includes/subjects.php';
-    $sub = ob_get_clean();
+    $sub = subjects();
 
     include 'layouts/ask.html.php';
 }
@@ -30,25 +31,27 @@ if (isset($_POST['qtitle'])){
     $subject_id = $_POST['subject'];
     $user_id = $_SESSION['userid'];
     $date = date('Y-m-d H:i:s');
+
+    include 'includes/uploadFile.php';
+    $image_path = '../uploads/' . basename($_FILES["fileToUpload"]["name"]);
     $data = [
         'title' => $title,
         'content' => $content,
         'idsubject' => $subject_id,
         'iduser' => $user_id,
-        'date_create' => $date
+        'date_create' => $date,
+        'image' => $image_path
     ];
-    
-    $stmt = $pdo->prepare("UPDATE questions SET title = :title, content = :content, idsubject = :idsubject, iduser = :iduser, date_create = :date_create WHERE id = :id");
-    //array_merge is new need to be ref in the report.
-    $stmt->execute(array_merge($data, ['id' => $id]));
-    echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                Your question is updated
-        </div>
-        <script>
-            setTimeout(function() {
-                document.getElementById("alert").remove();
-            }, 4000);
-        </script>';
+    $stmt = $pdo->prepare("INSERT INTO questions (title, content, idsubject, iduser, date_create, image) VALUES (:title, :content, :idsubject, :iduser, :date_create, :image)");
+    $stmt->execute($data);
+    echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
+                Your post created successfully
+            </div>
+            <script>
+                setTimeout(function() {
+                    document.getElementById("alert").remove();
+                }, 4000);
+            </script>';
 }
 // Populate the form fields with the existing data
 $output = ob_get_clean();

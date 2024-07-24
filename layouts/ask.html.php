@@ -11,6 +11,7 @@
         </div>
         <div class="col-sm-4 ms-5 mb-3">
             <input type="file" class="form-control" id="inputGroupFile02" accept=".jpg, .jpeg, .png, .gif" name ="fileToUpload">
+            <img id="previewImage" src="<?=$imgsrc?>" alt="Preview Image">
         </div>
         <div class="col-sm-4 ms-5">
             <textarea class="form-control" id="qcont" name="qcont" rows="3" placeholder = "Question Content"><?=isset($qcontent) ? $qcontent : '';?></textarea>

@@ -9,7 +9,6 @@ if (!isset($_SESSION['userid'])) {
     header("Location: index.php");
 }else{
     
-    //include 'includes/subjects.php';
     $sub = subjects();
     // ASk work not properly, cant upload IMG 
     ob_start();
@@ -23,23 +22,8 @@ if (!isset($_SESSION['userid'])) {
             $subject_id = $_POST['subject'];
             $user_id = $_SESSION['userid'];
             $date = date('Y-m-d H:i:s');
-                // Handle file upload
-            /*
-            $img = $_FILES['img'];
-            $img_tmp = $img['tmp_name'];
-            $img_name = $img['name'];
-            $img_type = $img['type'];
-            $img_size = $img['size'];
-            */
 
             include 'includes/uploadFile.php';
-            // Check if the file is an image
-            /*
-            if ($img_type == 'image/jpeg' || $img_type == 'image/png' || $img_type == 'image/gif') {
-                // Store the image data in the content column
-                $content = addslashes(file_get_contents($img_tmp));
-            }
-            */
             $image_path = '../uploads/' . basename($_FILES["fileToUpload"]["name"]);
             $data = [
                 'title' => $title,
