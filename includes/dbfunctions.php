@@ -1,4 +1,5 @@
 <?php
+//get the user's role, usually on login success 
 function get_role(){
     include 'includes/DatabaseConnection.php';
     $role = NULL;
