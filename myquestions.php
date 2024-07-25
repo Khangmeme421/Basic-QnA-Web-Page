@@ -10,11 +10,16 @@ if(!isset($_SESSION['userid'])){
 }else{
     if (isset($_POST['id'])) {
         $id = htmlspecialchars($_POST['id']);
+        /*
+        if (isset($_POST['img']))
+            delete_post($id,$_POST['img']);
+        else
+        */
         delete('questions',$id);
     }
     try{    
         $userid = (int)$_SESSION['userid'];
-        $sql = "SELECT q.id,q.date_create, q.iduser, q.title, q.content, q.idsubject, s.sub_name AS subject_name
+        $sql = "SELECT q.id,q.image,q.date_create, q.iduser, q.title, q.content, q.idsubject, s.sub_name AS subject_name
         FROM questions q
         JOIN users u ON q.iduser = u.id
         JOIN subject s ON q.idsubject = s.id
@@ -30,8 +35,10 @@ if(!isset($_SESSION['userid'])){
             echo '<a class="link-opacity-50-hover text-decoration-none float-start" href="index.php?subid='.htmlspecialchars($row['idsubject']).'">'.htmlspecialchars($row['subject_name']).'</a>';
             echo '<div class="float-end">';
             echo '<a class="link-opacity-50-hover text-decoration-none" href="edit_question.php?id='.htmlspecialchars($row['id']).'">Edit</a>';
+            $img = 'http://localhost/coursebt'.substr($row['image'],2);
             echo '<form action="" method="post" class="d-inline ms-3">
                     <input type="hidden" name="id" value="'.htmlspecialchars($row['id']).'">
+                    <input type="hidden" name="img" value="'.$img.'">
                     <a class="link-opacity-50-hover text-decoration-none" href="#" onclick="event.preventDefault(); this.parentNode.submit()">Delete</a>
                     </form>';
             echo '    </div>';
@@ -40,6 +47,8 @@ if(!isset($_SESSION['userid'])){
             echo '        <blockquote class="blockquote mb-0">';
             echo '<a class="link-opacity-50-hover text-decoration-none" href="index.php?id='.htmlspecialchars($row['id']).'">';
             echo '<p>'.htmlspecialchars($row['title']).'</p>';
+            $onerror_attr = 'onerror="this.style.display=\'none\'"';
+            echo "<img src=$img alt='Image' width='256' height='256'".$onerror_attr." class='mb-3'>";
             echo '</a>';
             echo '            <footer class="blockquote-footer">'.htmlspecialchars($row['date_create']).'</footer>';
             echo '        </blockquote>';

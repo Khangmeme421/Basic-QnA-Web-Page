@@ -1,5 +1,6 @@
 <?php
 //get the user's role, usually on login success 
+//send php mailer
 function get_role(){
     include 'includes/DatabaseConnection.php';
     $role = NULL;
@@ -27,6 +28,14 @@ function delete($table,$target){
     $delete->execute();
 }
 
+function delete_post($target, $image){
+    include 'includes/DatabaseConnection.php';
+    $sql = "DELETE FROM `questions`
+    WHERE id = $target";
+    $delete = $pdo->prepare($sql);
+    $delete->execute();
+    unlink($image);
+}
 // navigation pane based on role
 function nav(){
     ob_start();

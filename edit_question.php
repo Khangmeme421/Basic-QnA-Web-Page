@@ -18,7 +18,7 @@ if (isset($_GET['id'])){
     $qcontent = htmlspecialchars($row['content']);
     $qsubmit = htmlspecialchars('Update');
     $imgsrc = $row['image'];
-
+    //echo "<img src='http://localhost/coursebt/uploads/silly cart.jpeg' alt='Image' width='64' height='64'>";
     //Retrieve subjects name from database
     ob_start();
     $sub = subjects();

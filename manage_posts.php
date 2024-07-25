@@ -5,7 +5,7 @@ include 'includes/dbfunctions.php';
 $nav = nav();
 include 'includes/DatabaseConnection.php';
 if ($_SESSION['role']!='admin'){
-    header("Location: index.php")
+    header("Location: index.php");
 }
 ob_start();
 if (isset($_POST['id']) && isset($_POST['iduser'])) {
@@ -33,7 +33,7 @@ if (isset($_POST['id']) && isset($_POST['iduser'])) {
 }
 function displayPosts($pdo, $subid = null) {
     try {
-        $sql = 'SELECT q.id, q.iduser, q.title, q.date_create, q.content, q.idsubject, u.username, s.sub_name AS subject_name
+        $sql = 'SELECT q.id,q.image, q.iduser, q.title, q.date_create, q.content, q.idsubject, u.username, s.sub_name AS subject_name
         FROM questions q
         JOIN users u ON q.iduser = u.id
         JOIN subject s ON q.idsubject = s.id';
@@ -64,6 +64,9 @@ function displayPosts($pdo, $subid = null) {
             echo '        <blockquote class="blockquote mb-0">';
             echo '<a class="link-opacity-50-hover text-decoration-none" href="index.php?id='.htmlspecialchars($row['id']).'">';
             echo '<p>'.htmlspecialchars($row['title']).'</p>';
+            $img = 'http://localhost/coursebt'.substr($row['image'],2);
+            $onerror_attr = 'onerror="this.style.display=\'none\'"';
+            echo "<img src=$img alt='Image' width='256' height='256'".$onerror_attr." class='mb-3'>";
             echo '</a>';
             echo '            <footer class="blockquote-footer">'.htmlspecialchars($row['date_create']).' <a class="link-opacity-50-hover text-decoration-none" href="profile.php?id='.htmlspecialchars($row['iduser']). '"><cite title="Source Title">'. htmlspecialchars($row['username']).'</a></cite></footer>';
             echo '        </blockquote>';

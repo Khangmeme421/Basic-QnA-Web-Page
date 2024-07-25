@@ -7,7 +7,7 @@ $nav = nav();
 ob_start();
 function displayProblems($pdo, $subid = null) {
     try {
-        $sql = 'SELECT q.id, q.iduser, q.title, q.date_create, q.content, q.idsubject, u.username, s.sub_name AS subject_name
+        $sql = 'SELECT q.id,q.image, q.iduser, q.title, q.date_create, q.content, q.idsubject, u.username, s.sub_name AS subject_name
         FROM questions q
         JOIN users u ON q.iduser = u.id
         JOIN subject s ON q.idsubject = s.id';
@@ -26,6 +26,10 @@ function displayProblems($pdo, $subid = null) {
             echo '        <blockquote class="blockquote mb-0">';
             echo '<a class="link-opacity-50-hover text-decoration-none" href="index.php?id='.htmlspecialchars($row['id']).'">';
             echo '<p>'.htmlspecialchars($row['title']).'</p>';
+
+            $img = 'http://localhost/coursebt'.substr($row['image'],2);
+            $onerror_attr = 'onerror="this.style.display=\'none\'"';
+            echo "<img src=$img alt='Image' width='256' height='256'".$onerror_attr." class='mb-3'>";
             echo '</a>';
             echo '            <footer class="blockquote-footer">'.htmlspecialchars($row['date_create']).' <a class="link-opacity-50-hover text-decoration-none" href="profile.php?id='.htmlspecialchars($row['iduser']).'"><cite title="Source Title">'. htmlspecialchars($row['username']).'</cite></a></footer>';
             echo '        </blockquote>';
@@ -41,7 +45,7 @@ function displayProblems($pdo, $subid = null) {
 // if a post is selected
 function displayquestion($pdo){
     $id = htmlspecialchars($_GET['id']);
-    $sql = "SELECT q.id,q.iduser,q.title,q.content FROM questions q
+    $sql = "SELECT q.id,q.image,q.iduser,q.title,q.content FROM questions q
             WHERE id =$id";
     $question = $pdo->query($sql);
     $question_id = null;
@@ -49,6 +53,9 @@ function displayquestion($pdo){
     foreach($question as $inf){
         echo '<div class="mt-5 ms-5 mb-2 ">';
         echo '<h2>'.htmlspecialchars($inf['title']).'</h2>';
+        $img = 'http://localhost/coursebt'.substr($inf['image'],2);
+        $onerror_attr = 'onerror="this.style.display=\'none\'"';
+        echo "<img src=$img alt='Image'".$onerror_attr." class='mb-3'>";
         echo '<p>'.htmlspecialchars($inf['content']).'</p>';
         $question_id = $inf['id'];
         $q_uid = $inf['iduser'];
@@ -82,13 +89,25 @@ function displayquestion($pdo){
             $smfc->execute($data);
         }
     }
-    $sql = "SELECT a.content, a.date_create, u.username 
+    $sql = "SELECT a.content, a.iduser, a.date_create, u.username 
     FROM answers a 
     JOIN users u ON a.iduser = u.id 
     WHERE a.idquestion = $id";
     $comments = $pdo->query($sql);
     foreach($comments as $comment){
         echo '<div class="card col-sm-4 mt-5 ms-5 mb-2">';
+        //edit need to be rework
+        if ($_SESSION['userid']==$comment['iduser']){
+            echo '<div class="dropdown position-absolute top-0 end-0" >
+            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-image: none !important;">
+              ⋮
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li><a class="dropdown-item" href="#">Edit</a></li>
+              <li><a class="dropdown-item" href="#">Delete</a></li>
+            </ul>
+          </div>';
+        }
         echo '<p class="mb-1">'.htmlspecialchars($comment['username']).': '.htmlspecialchars($comment['content']).'</p>';
         echo '<p>'.htmlspecialchars($comment['date_create']);
         echo '</div>';
