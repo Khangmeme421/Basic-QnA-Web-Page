@@ -57,10 +57,44 @@ function subjects(){
     ob_start();
     include 'includes/DatabaseConnection.php';
     $sql = 'SELECT * FROM `subject`';
-    $subjects = $pdo->query($sql);
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $subjects = $stmt->fetchAll();
     foreach ($subjects as $subject){
         echo '<option value="'.$subject['id'].'">'.$subject['sub_name'].'</option>';
     }
     $sub = ob_get_clean();
     return $sub;
+}
+
+function count_data($table,$target,$column){
+    include 'includes/DatabaseConnection.php';
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM $table WHERE $column = :target");
+    $stmt->bindParam(':target', $target);
+    $stmt->execute();
+    return $stmt->fetchColumn();
+}
+
+// manage upvote
+function upvote($idQuestion,$idUser){
+    include 'includes/DatabaseConnection.php';
+    // Check if the upvote already exists
+    $stmt = $pdo->prepare("SELECT * FROM upvote WHERE idquestion = :idquestion AND iduser = :iduser");
+    $stmt->bindParam(':idquestion', $idQuestion);
+    $stmt->bindParam(':iduser', $idUser);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+        // If the upvote already exists, delete it
+        $stmt = $pdo->prepare("DELETE FROM upvote WHERE idquestion = :idquestion AND iduser = :iduser");
+        $stmt->bindParam(':idquestion', $idQuestion);
+        $stmt->bindParam(':iduser', $idUser);
+        $stmt->execute();
+    } else {
+        // If the upvote does not exist, insert it
+        $stmt = $pdo->prepare("INSERT INTO upvote (idquestion, iduser) VALUES (:idquestion, :iduser)");
+        $stmt->bindParam(':idquestion', $idQuestion);
+        $stmt->bindParam(':iduser', $idUser);
+        $stmt->execute();
+    }
 }

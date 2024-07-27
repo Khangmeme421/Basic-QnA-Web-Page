@@ -26,7 +26,7 @@ if (!isset($_SESSION['userid'])) {
             $sender = null;
             $question = null;
             if ($row['idsender']!= NULL && $row['idquestion']){
-                $sender = '<a class="text-decoration-none" href="profile?id='.$row['idsender'].'">'.htmlspecialchars($row['username']).'</a>';
+                $sender = '<a class="text-decoration-none" href="profile.php?id='.$row['idsender'].'">'.htmlspecialchars($row['username']).'</a>';
                 $question = '<a class="text-decoration-none" href="index.php?id='.$row['idquestion'].'">'.'post'.'</a>';
             }
             echo '<div class="card col-sm-6 mt-5 ms-5 mb-2">';

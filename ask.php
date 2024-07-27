@@ -10,7 +10,6 @@ if (!isset($_SESSION['userid'])) {
 }else{
     
     $sub = subjects();
-    // ASk work not properly, cant upload IMG 
     ob_start();
     include 'layouts/ask.html.php';
     include 'includes/DatabaseConnection.php';

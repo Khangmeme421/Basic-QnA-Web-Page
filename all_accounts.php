@@ -16,7 +16,7 @@ try{
         echo '<div class="card col-12 col-sm-6 mt-5 ms-5 mb-2">';
         echo '    <div class="card-body">';
         echo '         <div class="float-start">';
-        echo '          <p>'.$user['name'].'</p>';
+        echo '          <p><a class="text-decoration-none" href="profile.php?id='.$user['id'].'">'.$user['name'].'</a></p>';
         echo '          <p>'.$user['email'].'</p>';
         echo '         </div>';
         echo '      <div class="float-end">';

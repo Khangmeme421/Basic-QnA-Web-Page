@@ -17,18 +17,24 @@ if(empty($_SESSION['userid'])){
             $password = md5($_POST['password']);
             // Check if the input is an email address
             if (filter_var($username_or_email, FILTER_VALIDATE_EMAIL)) {
-                $sql = "SELECT * FROM users WHERE email = '". $username_or_email. "' AND password = '". $password. "'";
+                $sql = "SELECT * FROM users WHERE email = :username_or_email AND password = :password";
             } else {
-                $sql = "SELECT * FROM users WHERE username = '". $username_or_email. "' AND password = '". $password. "'";
+                $sql = "SELECT * FROM users WHERE username = :username_or_email AND password = :password";
             }
-            $info = $pdo->query($sql);
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':username_or_email', $username_or_email);
+            $stmt->bindParam(':password', $password);
+            $stmt->execute();
+            $info = $stmt->fetch();
+
             $login_success = false;
             $userid = NULL;
             $user_name = null;
-            foreach ($info as $inf) {
+            if ($info) {
                 $login_success = true;
-                $userid = $inf['id'];
-                $user_name = $inf['name'];
+                $userid = $info['id'];
+                $user_name = $info['name'];
             }
             if ($login_success) {
                 setcookie('userid', $userid, time() + (30 * 24 * 60 * 60));

@@ -13,10 +13,15 @@ if (isset($_GET['id'])) {
         WHERE id=$id";
         $user = $pdo->query($sql);
         foreach ($user as $attributes){
-            echo '<p>'.htmlspecialchars($attributes['name']).'</p>';
-            echo '<p>'.htmlspecialchars($attributes['email']).'</p>';
+            echo '<h2 class="mt-5 ms-5 mb-2">'.htmlspecialchars($attributes['name']).'</h2>';
+            echo '<p class="mt-5 ms-5 mb-2"> <b>Email</b>: '.htmlspecialchars($attributes['email']).'</p>';
         }
-        
+        $q_posted = count_data('questions','iduser',$id);
+        $a_posted = count_data('answers','iduser',$id);
+        echo '<h3 class="mt-5 ms-5 mb-2">Contribution</h3>';
+        echo '<p class="mt-5 ms-5 mb-2">Questions posted: '.$q_posted.'</p>';
+        echo '<p class="mt-1 ms-5 mb-2">Answers posted: '.$a_posted.'</p>';
+
     }catch (PDOException $e){
         $title = 'An error has occured';
         $output= 'Database error: ' . $e->getMessage();
