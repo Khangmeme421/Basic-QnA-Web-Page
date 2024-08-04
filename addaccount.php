@@ -10,6 +10,11 @@ ob_start();
 if($_SESSION['role']=='admin'){
     include 'layouts/newacc.html.php';
     try {
+        if (isset($_GET['success'])){
+            echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
+                        New account added
+                    </div>';
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Retrieve the form data
             $username = $_POST['username'];
@@ -38,19 +43,20 @@ if($_SESSION['role']=='admin'){
             }else{
                 echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         Username or Email existed
-                    </div>
-                    <script>
-                        setTimeout(function() {
-                            document.getElementById("alert").remove();
-                        }, 4000);
-                    </script>';
-            }
+                    </div>';
+                }
+            echo '<script>
+                    setTimeout(function() {
+                        document.getElementById("alert").remove();
+                    }, 4000);
+                </script>';
         }
     } catch (PDOException $e) {
         $output = 'Database error: '. $e->getMessage();
     }
 }else{
-    include 'layouts/redirect.html.php';
+    //redirect user to home page if not loged in as admin
+    header('Location: index.php');
 }
 
 $output = ob_get_clean();

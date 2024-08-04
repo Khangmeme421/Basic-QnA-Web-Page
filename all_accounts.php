@@ -5,13 +5,16 @@ include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
 $nav = nav();
 ob_start();
+//delete account with given id via POST method
 if (isset($_POST['id'])) {
     $id = htmlspecialchars($_POST['id']);
     delete('users',$id);
 }
 try{
+    //select everyone except theirself
     $sql = 'SELECT * FROM `users` WHERE id !='.$_SESSION['userid'];
     $users = $pdo->query($sql);
+    //display account list
     foreach ($users as $user){
         echo '<div class="card col-12 col-sm-6 mt-5 ms-5 mb-2">';
         echo '    <div class="card-body">';
