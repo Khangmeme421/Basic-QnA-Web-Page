@@ -12,11 +12,16 @@ $butt = 'Update';
 //if a post selected create $val stores all subjects info
 if (isset($_GET['id'])){
     try{
-        $sql = 'SELECT * FROM `subject` WHERE id='.$_GET['id'];
-        $subjects = $pdo->query($sql);
+        $sql = 'SELECT * FROM `subject` WHERE id=:id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $_GET['id']);
+        $stmt->execute();
+        $subjects = $stmt->fetchAll();
+
         foreach ($subjects as $subject){
             $val = $subject['sub_name'];
         }
+
         $val = 'value="'.$val.'"';
     }catch(PDOException $e){
         $title = 'An error has occured';

@@ -136,8 +136,10 @@ function displayQuestions($pdo, $options = array()) {
             echo '<div class="card-deck">';
             echo '<div class="card col-12 col-sm-6 mt-5 ms-5 mb-2">';
             echo '    <div class="card-header">';
+            //show subject name at the top left of the post
             echo '<a class="link-opacity-50-hover text-decoration-none" href="index.php?subid=' . htmlspecialchars($row['idsubject']) . '">' . htmlspecialchars($row['subject_name']) . '</a>';
 
+            //display various options that allow user to modify their post
             if (isset($options['userid'])) {
                 echo '<div class="float-end">';
                 echo '<a class="link-opacity-50-hover text-decoration-none" href="edit_question.php?id=' . htmlspecialchars($row['id']) . '">Edit</a>';
@@ -146,6 +148,7 @@ function displayQuestions($pdo, $options = array()) {
                         <a class="link-opacity-50-hover text-decoration-none" href="#" onclick="event.preventDefault(); this.parentNode.submit()">Delete</a>
                         </form>';
                 echo '    </div>';
+            //for admin users, they can delete posts
             } elseif (isset($_SESSION['role'])&& $_SESSION['role']=='admin') {
                 echo '      <div class="float-end">';
                 echo '<form action="" method="post" class="d-inline ms-3">
@@ -160,14 +163,17 @@ function displayQuestions($pdo, $options = array()) {
             echo '    <div class="card-body">';
             echo '        <blockquote class="blockquote mb-0">';
             echo '<a class="link-opacity-50-hover text-decoration-none" href="index.php?id=' . htmlspecialchars($row['id']) . '">';
+            //display post's title in the <a> tag
             echo '<p>' . htmlspecialchars($row['title']) . '</p>';
             $img = 'http://localhost/coursebt' . substr($row['image'], 2);
             $onerror_attr = 'onerror="this.style.display=\'none\'"';
+            //display image if the post contains image
             echo "<img src=$img alt='Image' width='256' height='256'" . $onerror_attr . " class='mb-3'>";
             echo '</a>';
             echo '            <footer class="blockquote-footer">' . htmlspecialchars($row['date_create']) . ' <a class="link-opacity-50-hover text-decoration-none" href="profile.php?id=' . htmlspecialchars($row['iduser']) . '"><cite title="Source Title">' . htmlspecialchars($row['username']) . '</a></cite></footer>';
             echo '        </blockquote>';
             echo '    </div>';
+            //show comments count and upvotes
             $upvote = count_data('upvote','idquestion',$row['id']);
             $comment_count = count_data('answers','idquestion',$row['id']);
             echo '  <div class="card-footer">';
@@ -205,7 +211,7 @@ function displayAnswers($pdo, $idQuestion){
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
             
             if ($_SESSION['userid'] == $comment['iduser']) {
-                echo '<li><a class="dropdown-item" href="#">Edit</a></li>';
+                echo '<li><a class="dropdown-item" href="edit_answer.php?id='.htmlspecialchars($comment['id']).'">Edit</a></li>';
             }
             
             echo '<li>

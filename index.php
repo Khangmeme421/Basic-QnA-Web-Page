@@ -80,7 +80,7 @@ if(isset($_GET['subid'])) {
     displayquestion($pdo);
 }
 else {
-    //displayProblems($pdo);
+    //use var name != $title to avoid conflict in the code
     $tit = 'Have a problem? Just <a class="text-decoration-none" href="ask.php">ask</a>';
     displayQuestions($pdo, array('title' => $tit));
 }
