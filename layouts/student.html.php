@@ -4,3 +4,6 @@
 <li class="nav-item">
     <a class="nav-link" href="notifications.php">Notifications</a>
 </li>
+<li class="nav-item">
+    <a class="nav-link" href="send_feedback.php">Send feedback</a>
+</li>

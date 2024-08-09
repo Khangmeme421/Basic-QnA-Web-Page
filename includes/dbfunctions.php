@@ -1,6 +1,5 @@
 <?php
 //get the user's role, usually on login success 
-//send php mailer
 function get_role(){
     include 'includes/DatabaseConnection.php';
     $role = NULL;
