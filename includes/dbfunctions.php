@@ -27,10 +27,10 @@ function delete($table,$target){
     $delete->execute();
 }
 // send a message if admin delete
-function admin_delete($id_victim,$content){
+function admin_delete($id_receiver,$content){
     $data = [
         'idsender' => null,
-        'iduser' => $id_victim,
+        'iduser' => $id_receiver,
         'idquestion' => null,
         'date_create' => date('Y-m-d H:i:s'),
         'content' => $content
