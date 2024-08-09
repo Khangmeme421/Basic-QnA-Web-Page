@@ -64,11 +64,6 @@ if (!isset($_SESSION['userid'])) {
                     </div>
                     <script>';
         }
-        //Send success message to user
-        echo'setTimeout(function() {
-                        document.getElementById("alert").remove();
-                    }, 4000);
-                </script>';
     }
 }
 $output = ob_get_clean();

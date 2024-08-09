@@ -44,21 +44,10 @@ if (isset($_POST['module'])){
         echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         New subject created successfully
                     </div>';
-        echo '<script>
-                setTimeout(function() {
-                    document.getElementById("alert").remove();
-                    window.location.href = "managemodules.php";
-                }, 4000);
-            </script>';
     }else{
         echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         Subject already exist
                     </div>';
-        echo '<script>
-                setTimeout(function() {
-                    document.getElementById("alert").remove();
-                }, 4000);
-            </script>';
     }
     
 }

@@ -46,12 +46,7 @@ if(empty($_SESSION['userid'])){
             } else {
                 echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         Invalid login details
-                    </div>
-                    <script>
-                        setTimeout(function() {
-                            document.getElementById("alert").remove();
-                        }, 4000);
-                    </script>';
+                    </div>';
             }
         } catch (PDOException $e) {
             $output = 'Database error: '. $e->getMessage();

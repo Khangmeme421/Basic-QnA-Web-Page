@@ -21,5 +21,11 @@
   </nav>
     <?=$output?>
     <script src="bootstrap/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!--remove popup after 4s -->
+    <script>
+      setTimeout(function() {
+          document.getElementById("alert").remove();
+      }, 4000);
+    </script>
   </body>
 </html>

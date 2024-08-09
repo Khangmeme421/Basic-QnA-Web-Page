@@ -26,11 +26,6 @@ if (isset($_POST['module'])){
                         Subject already exists
                     </div>';
     }
-    echo '<script>
-            setTimeout(function() {
-                document.getElementById("alert").remove();
-            }, 4000);
-        </script>';
 }
 if (isset($_POST['id'])) {
     $id = htmlspecialchars($_POST['id']);

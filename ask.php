@@ -36,12 +36,7 @@ if (!isset($_SESSION['userid'])) {
             //Send success message to user
             echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         Your post created successfully
-                    </div>
-                    <script>
-                        setTimeout(function() {
-                            document.getElementById("alert").remove();
-                        }, 4000);
-                    </script>';
+                    </div>';
         }
     }catch (PDOException $e){
         $output= 'Database error: ' . $e->getMessage();

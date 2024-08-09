@@ -5,8 +5,6 @@ include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
 $nav = nav();
 ob_start();
-
-// Add Account worked but need some optimization
 if(isset($_SESSION['userid'])){ 
     include 'layouts/update_password.html.php';
     try {
@@ -46,11 +44,6 @@ if(isset($_SESSION['userid'])){
                 Password updated successfully
                     </div>';
             }
-            echo '<script>
-                    setTimeout(function() {
-                        document.getElementById("alert").remove();
-                    }, 4000);
-                </script>';
         }
     } catch (PDOException $e) {
         $output = 'Database error: '. $e->getMessage();

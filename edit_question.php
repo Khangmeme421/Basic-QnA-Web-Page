@@ -46,12 +46,7 @@ if (isset($_POST['qtitle'])){
     $stmt->execute($data);
     echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                 Your post created successfully
-            </div>
-            <script>
-                setTimeout(function() {
-                    document.getElementById("alert").remove();
-                }, 4000);
-            </script>';
+            </div>';
 }
 // Populate the form fields with the existing data
 $output = ob_get_clean();

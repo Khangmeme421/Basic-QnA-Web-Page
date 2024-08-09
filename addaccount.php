@@ -45,11 +45,6 @@ if($_SESSION['role']=='admin'){
                         Username or Email existed
                     </div>';
                 }
-            echo '<script>
-                    setTimeout(function() {
-                        document.getElementById("alert").remove();
-                    }, 4000);
-                </script>';
         }
     } catch (PDOException $e) {
         $output = 'Database error: '. $e->getMessage();
