@@ -18,9 +18,8 @@ function displayquestion($pdo){
     $sql = "SELECT q.id,q.image,q.iduser,q.title,q.content FROM questions q
             WHERE id =$id";
     $question = $pdo->query($sql);
-    $question_id = null;
-    $q_uid = null;
-    foreach($question as $inf){
+    $inf = $question->fetch();
+    if ($inf) {
         echo '<div class="mt-5 ms-5 mb-2 ">';
         echo '<h2>'.htmlspecialchars($inf['title']).'</h2>';
         $img = 'http://localhost/coursebt'.substr($inf['image'],2);
@@ -34,12 +33,13 @@ function displayquestion($pdo){
     include 'layouts/comment.html.php';
     //delete comment in database
     if (isset($_POST['comment_id'])) {
-        $id = htmlspecialchars($_POST['comment_id']);
-        delete('answers',$id);
+        $del_id = htmlspecialchars($_POST['comment_id']);   //delete post based on id from post method
+        delete('answers',$del_id);
         if (isset($_POST['iduser'])){
             $content = 'Admin deleted your comment';
             admin_delete($_POST['iduser'],$content);
         }
+        header("Location: index.php?id=$id");   //refresh page after delete
     }
     //insert comment to database
     if (isset($_POST['comment'])){
@@ -53,7 +53,6 @@ function displayquestion($pdo){
             'content' => $comment
         ];
         $stmt = $pdo->prepare("INSERT INTO answers SET content = :content, idquestion = :idquestion, iduser = :iduser, date_create = :date_create");
-        //array_merge is new need to be ref in the report.
         $stmt->execute($data);
         // if user does not comment their own post send a notification to receiver
         if ($q_uid != $_SESSION['userid']){
@@ -78,6 +77,7 @@ if(isset($_GET['subid'])) {
     displayQuestions($pdo, array('subid' => $_GET['subid'],'title' => $tit));
 }elseif(isset($_GET['id'])) {
     displayquestion($pdo);
+    //displayAnswers($pdo, $_GET['id']);
 }
 else {
     //use var name != $title to avoid conflict in the code

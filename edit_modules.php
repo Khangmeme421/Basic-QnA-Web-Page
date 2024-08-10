@@ -8,7 +8,6 @@ ob_start();
 //redirect user to home page if not loged in as admin
 if ($_SESSION['role']!='admin')
     header("Location: index.php");
-$butt = 'Update';
 //if a post selected create $val stores all subjects info
 if (isset($_GET['id'])){
     try{

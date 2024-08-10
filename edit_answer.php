@@ -24,9 +24,6 @@ if (isset($_POST['module'])){
     $stmt->bindParam(':content', $_POST['module']);
     $stmt->bindParam(':id', $_GET['id']);
     $stmt->execute();
-    echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                    New subject created successfully
-                </div>';
 }
 $output = ob_get_clean();
 include 'layouts/index.html.php';

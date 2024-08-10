@@ -37,7 +37,7 @@ if(empty($_SESSION['userid'])){
                 $user_name = $info['name'];
             }
             if ($login_success) {
-                setcookie('userid', $userid, time() + (30 * 24 * 60 * 60));
+                setcookie('userid', $userid, time() + (30 * 24 * 60 * 60), '/', '', true, true); // add secure and httponly flags
                 session_regenerate_id();
                 $_SESSION['userid'] = $userid;
                 $_SESSION['role'] = get_role();
