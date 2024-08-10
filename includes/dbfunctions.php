@@ -212,13 +212,19 @@ function displayAnswers($pdo, $idQuestion){
     }
     $comments = $pdo->query($sql);
     foreach($comments as $comment){
-        if (isset($_GET['answer_id']) && $_GET['answer_id'] == $comment['id']) {
+        $stmt = $pdo->prepare("SELECT iduser FROM answers WHERE id = :answer_id");
+        $stmt->bindParam(':answer_id', $_GET['answer_id']);
+        $stmt->execute();
+        $result = $stmt->fetchColumn();
+        $check = false;
+        if ($result !== false && $result == $_SESSION['userid']) 
+            $check = true;
+        if (isset($_GET['answer_id']) && $_GET['answer_id'] == $comment['id'] && $check == true) {
             $val = 'value="'.$comment['content'].'"';
             $link = '"index.php?id=' . htmlspecialchars($idQuestion) . '"';
             include 'layouts/mngmodules.html.php';
         }else{
             echo '<div class="card col-sm-4 mt-5 ms-5 mb-2">';
-            //edit need to be rework
             if ((isset($_SESSION['userid'])&& $_SESSION['userid'] == $comment['iduser'] ) || (isset($_SESSION['userid'])&& $_SESSION['role'] == 'admin')) {
                 echo '<div class="dropdown position-absolute top-0 end-0" >
                     <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
