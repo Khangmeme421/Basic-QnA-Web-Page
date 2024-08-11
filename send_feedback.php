@@ -3,6 +3,7 @@ $title = 'Send Feedback';
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
+set_cookie()
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 $nav = nav();

@@ -18,7 +18,18 @@ function get_role(){
     }
     return $role;
 }
-
+//generate cookie on user back to the site
+function set_cookie(){
+/**
+ * This function sets the session variables 'userid', 'role', and 'username'
+ * to the values of the corresponding cookies. This is done to maintain the
+ * user's session information when the user returns to the site after being
+ * away for a while.
+ */
+    $_SESSION['userid'] = $_COOKIE['userid'];
+    $_SESSION['role'] = $_COOKIE['role'];
+    $_SESSION['username'] = $_COOKIE['username'];
+}
 // delete a $target in $table 
 function delete($table,$target){
     include 'includes/DatabaseConnection.php';
@@ -194,70 +205,77 @@ function displayQuestions($pdo, $options = array()) {
     }
 }
 
-//display comments
-function displayAnswers($pdo, $idQuestion){
-    $sql = "SELECT a.id,a.content, a.iduser, a.date_create, u.username 
-    FROM answers a 
-    JOIN users u ON a.iduser = u.id 
-    WHERE a.idquestion = $idQuestion";
-    //update comment
-    if (isset($_POST['module'])){
-        $name = $_POST['module'];
-        $idcmt = $_GET['answer_id'];
-        $stmt = $pdo->prepare("UPDATE `answers` SET `content` = :name WHERE `id` = :id");
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':id', $idcmt);
-        $stmt->execute();
-        header("Location: index.php?id=" . $idQuestion);
-    }
-    $comments = $pdo->query($sql);
-    foreach($comments as $comment){
+/**
+ * Displays comments for a given question.
+ */
+function displayAnswers(PDO $pdo, int $idQuestion): void
+{
+    // SQL query to fetch comments for a question
+    $sql = "SELECT a.id, a.content, a.iduser, a.date_create, u.username 
+            FROM answers a 
+            JOIN users u ON a.iduser = u.id 
+            WHERE a.idquestion = :idQuestion";
+
+    // Prepare and execute the query
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['idQuestion' => $idQuestion]);
+
+    // Loop through the comments and display them
+    foreach ($stmt->fetchAll() as $comment) {
+        // Check if the current comment is being edited
+        if (isset($_POST['module'])) {
+            $name = $_POST['module'];
+            $idcmt = $_GET['answer_id'];
+            $stmt = $pdo->prepare("UPDATE `answers` SET `content` = :name WHERE `id` = :id");
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':id', $idcmt);
+            $stmt->execute();
+            header("Location: index.php?id=" . $idQuestion);
+        }
+
+        // Check if the current comment belongs to the user
         $stmt = $pdo->prepare("SELECT iduser FROM answers WHERE id = :answer_id");
         $stmt->bindParam(':answer_id', $_GET['answer_id']);
         $stmt->execute();
         $result = $stmt->fetchColumn();
-        $check = false;
-        if ($result !== false && $result == $_SESSION['userid']) 
-            $check = true;
-        if (isset($_GET['answer_id']) && $_GET['answer_id'] == $comment['id'] && $check == true) {
-            $val = 'value="'.$comment['content'].'"';
+        $check = $result !== false && $result == $_SESSION['userid'];
+
+        // Display comment if the user is allowed to edit or view it
+        if (isset($_GET['answer_id']) && $_GET['answer_id'] == $comment['id'] && $check) {
+            $val = 'value="' . htmlspecialchars($comment['content']) . '"';
             $link = '"index.php?id=' . htmlspecialchars($idQuestion) . '"';
             include 'layouts/mngmodules.html.php';
-        }else{
+        } else {
             echo '<div class="card col-sm-4 mt-5 ms-5 mb-2">';
-            if ((isset($_SESSION['userid'])&& $_SESSION['userid'] == $comment['iduser'] ) || (isset($_SESSION['userid'])&& $_SESSION['role'] == 'admin')) {
-                echo '<div class="dropdown position-absolute top-0 end-0" >
+            if ((isset($_SESSION['userid']) && $_SESSION['userid'] == $comment['iduser']) || (isset($_SESSION['userid']) && $_SESSION['role'] == 'admin')) {
+                echo '<div class="dropdown position-absolute top-0 end-0">
                     <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
                         ⋮
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-                
                 if ($_SESSION['userid'] == $comment['iduser']) {
                     echo '<li>
                             <a href="index.php?id=' . htmlspecialchars($idQuestion) . '&answer_id=' . htmlspecialchars($comment['id']) . '" class="dropdown-item text-decoration-none">Edit</a>
                         </li>';
-                }       
+                }
                 echo '<li>
                     <form action="" method="post" class="d-inline">
-                    <input type="hidden" name="comment_id" value="'.htmlspecialchars($comment['id']).'">';
-                
+                    <input type="hidden" name="comment_id" value="' . htmlspecialchars($comment['id']) . '">';
                 if ($_SESSION['role'] == 'admin') {
-                    echo '<input type="hidden" name="iduser" value="'.htmlspecialchars($comment['iduser']).'">';
+                    echo '<input type="hidden" name="iduser" value="' . htmlspecialchars($comment['iduser']) . '">';
                 }
-                
                 echo '<button class="dropdown-item text-decoration-none" type="submit">Delete</button>
                     </form>
                     </li>
                     </ul>
                     </div>';
             }
-            echo '<p class="mb-1">'.htmlspecialchars($comment['username']).': '.htmlspecialchars($comment['content']).'</p>';
-            echo '<p>'.htmlspecialchars($comment['date_create']);
+            echo '<p class="mb-1">' . htmlspecialchars($comment['username']) . ': ' . htmlspecialchars($comment['content']) . '</p>';
+            echo '<p>' . htmlspecialchars($comment['date_create']);
             echo '</div>';
         }
     }
 }
-
 //manage subject or modules
 function manageSubject($pdo, $name, $id = null, $action = 'insert') {
     $stmt = $pdo->prepare('SELECT * FROM `subject` WHERE `sub_name` = :name');

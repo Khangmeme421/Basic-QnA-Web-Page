@@ -3,6 +3,7 @@ $title = 'All Accounts';
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
+set_cookie()
 $nav = nav();
 ob_start();
 //delete account with given id via POST method

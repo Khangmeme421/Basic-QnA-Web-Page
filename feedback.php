@@ -3,6 +3,7 @@ $title = 'Feedback';
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
+set_cookie()
 $nav = nav();
 ob_start();
 //redirect user to home if user is not admin

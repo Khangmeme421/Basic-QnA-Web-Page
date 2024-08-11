@@ -3,6 +3,7 @@ $title = 'Add Account';
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
+set_cookie()
 $nav = nav();
 ob_start();
 

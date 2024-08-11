@@ -5,9 +5,10 @@ ob_start();
 if (!isset($_SESSION['userid'])){
     include 'layouts/loginbtn.html.php';
 }
+echo $_COOKIE['role'];
 $nav = ob_get_clean();  //display login button
 ob_start();
-if(empty($_SESSION['userid'])){
+if(!(isset($_COOKIE['userid']))){
     include 'layouts/login.html.php';   //display layout
     include 'includes/DatabaseConnection.php';
     include 'includes/dbfunctions.php';
@@ -37,11 +38,12 @@ if(empty($_SESSION['userid'])){
                 $user_name = $info['name'];
             }
             if ($login_success) {
-                setcookie('userid', $userid, time() + (30 * 24 * 60 * 60), '/', '', true, true); // add secure and httponly flags
-                session_regenerate_id();
                 $_SESSION['userid'] = $userid;
                 $_SESSION['role'] = get_role();
                 $_SESSION['username'] = $user_name;
+                setcookie('userid', $userid, time() + (30 * 24 * 60 * 60), '/', '', true);
+                setcookie('role', get_role(), time() + (30 * 24 * 60 * 60), '/', '', true);
+                setcookie('username', $user_name, time() + (30 * 24 * 60 * 60), '/', '', true);
                 header("Location: index.php");
             } else {
                 echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">

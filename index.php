@@ -3,6 +3,7 @@ $title = 'Home';
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
+set_cookie();
 $nav = nav();
 ob_start();
 //handling upvote
@@ -11,65 +12,112 @@ if (isset($_POST['upvote']) && isset($_SESSION['userid'])) {
     $idUser = $_SESSION['userid'];
     upvote($idQuestion,$idUser);
 }
-// if a post is selected
-function displayquestion($pdo){
-    //display the post
-    $id = htmlspecialchars($_GET['id']);
-    $sql = "SELECT q.id,q.image,q.iduser,q.title,q.content FROM questions q
-            WHERE id =$id";
-    $question = $pdo->query($sql);
-    $inf = $question->fetch();
-    if ($inf) {
-        echo '<div class="mt-5 ms-5 mb-2 ">';
-        echo '<h2>'.htmlspecialchars($inf['title']).'</h2>';
-        $img = 'http://localhost/coursebt'.substr($inf['image'],2);
-        $onerror_attr = 'onerror="this.style.display=\'none\'"';
-        echo "<img src=$img alt='Image'".$onerror_attr." class='mb-3'>";
-        echo '<p>'.htmlspecialchars($inf['content']).'</p>';
-        $question_id = $inf['id'];
-        $q_uid = $inf['iduser'];
+/**
+ * Displays a question and its answers on the index page.
+ */
+function displayQuestion($pdo) {
+    // Retrieve the question ID from the URL parameter
+    $questionId = htmlspecialchars($_GET['id']);
+
+    // Prepare the SQL query to fetch the question details
+    $sql = "SELECT q.id, q.image, q.iduser, q.title, q.content FROM questions q
+            WHERE id = :questionId";
+    $statement = $pdo->prepare($sql);
+    $statement->bindParam(':questionId', $questionId);
+    $statement->execute();
+
+    // Fetch the question details from the database
+    $question = $statement->fetch();
+
+    // If the question exists, display it
+    if ($question) {
+        echo '<div class="mt-5 ms-5 mb-2">';
+
+        // Display the question title
+        echo '<h2>' . htmlspecialchars($question['title']) . '</h2>';
+
+        // Display the question image
+        $imageUrl = 'http://localhost/coursebt' . substr($question['image'], 2);
+        $onErrorAttr = 'onerror="this.style.display=\'none\'"';
+        echo "<img src=$imageUrl alt='Image' $onErrorAttr class='mb-3'>";
+
+        // Display the question content
+        echo '<p>' . htmlspecialchars($question['content']) . '</p>';
+
+        // Store the question ID and user ID for future reference
+        $questionId = $question['id'];
+        $questionUserId = $question['iduser'];
+
         echo '</div>';
     }
+
+    // Include the HTML layout for comments
     include 'layouts/comment.html.php';
-    //delete comment in database
+
+    // Handle deletion of a comment
+    handleCommentDeletion($pdo, $questionId);
+
+    // Handle addition of a new comment
+    handleCommentAddition($pdo, $questionId, $questionUserId);
+
+    // Display the answers to the question
+    displayAnswers($pdo, $questionId);
+}
+
+/**
+ * Handles the deletion of a comment.
+ * @param int $questionId The ID of the question.
+ */
+function handleCommentDeletion($pdo, $questionId) {
     if (isset($_POST['comment_id'])) {
-        $del_id = htmlspecialchars($_POST['comment_id']);   //delete post based on id from post method
-        delete('answers',$del_id);
-        if (isset($_POST['iduser'])){
+        $commentId = htmlspecialchars($_POST['comment_id']);
+        delete('answers', $commentId);
+
+        if (isset($_POST['iduser'])) {
             $content = 'Admin deleted your comment';
-            admin_delete($_POST['iduser'],$content);
+            adminDelete($_POST['iduser'], $content);
         }
-        header("Location: index.php?id=$id");   //refresh page after delete
+
+        header("Location: index.php?id=$questionId");
     }
-    //insert comment to database
-    if (isset($_POST['comment'])){
+}
+
+/**
+ * Handles the addition of a new comment.
+ * @param int $questionId The ID of the question.
+ * @param int $questionUserId The ID of the question owner.
+ */
+function handleCommentAddition($pdo, $questionId, $questionUserId) {
+    if (isset($_POST['comment'])) {
         $comment = $_POST['comment'];
-        $user_id = $_SESSION['userid'];
+        $userId = $_SESSION['userid'];
         $date = date('Y-m-d H:i:s');
+
         $data = [
-            'iduser' => $user_id,
-            'idquestion' => $question_id,
-            'date_create' => $date,
+            'userId' => $userId,
+            'questionId' => $questionId,
+            'dateCreated' => $date,
             'content' => $comment
         ];
-        $stmt = $pdo->prepare("INSERT INTO answers SET content = :content, idquestion = :idquestion, iduser = :iduser, date_create = :date_create");
-        $stmt->execute($data);
-        // if user does not comment their own post send a notification to receiver
-        if ($q_uid != $_SESSION['userid']){
-            $data = null;
-            $comment = 'commented on your ';
-            $data = [
-                'idsender' => $_SESSION['userid'],
-                'iduser' => $q_uid,
-                'idquestion' => $question_id,
-                'date_create' => $date,
-                'content' => $comment
+
+        $sql = "INSERT INTO answers SET content = :content, idquestion = :questionId, iduser = :userId, date_create = :dateCreated";
+        $statement = $pdo->prepare($sql);
+        $statement->execute($data);
+
+        if ($questionUserId != $userId) {
+            $notificationData = [
+                'senderId' => $userId,
+                'userId' => $questionUserId,
+                'questionId' => $questionId,
+                'dateCreated' => $date,
+                'content' => 'commented on your '
             ];
-            $smfc = $pdo->prepare("INSERT INTO notifications SET content = :content, idsender = :idsender, idquestion = :idquestion, iduser = :iduser, date_create = :date_create");
-            $smfc->execute($data);
+
+            $notificationSql = "INSERT INTO notifications SET content = :content, idsender = :senderId, idquestion = :questionId, iduser = :userId, date_create = :dateCreated";
+            $notificationStatement = $pdo->prepare($notificationSql);
+            $notificationStatement->execute($notificationData);
         }
     }
-    displayAnswers($pdo, $id);
 }
 if(isset($_GET['subid'])) {
     //displayProblems($pdo, $_GET['subid']);

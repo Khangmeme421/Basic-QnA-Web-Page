@@ -3,6 +3,7 @@ $title = 'Manage Modules';
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
+set_cookie()
 $nav = nav();
 ob_start();
 if ($_SESSION['role']!='admin')
