@@ -1,39 +1,42 @@
 <?php
-$title = 'Edit Question';
+$title = 'Edit Question';   // Set the title of the page
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
-set_cookie()
-$nav = nav();
+set_cookie();    //retrieve data from cookie
+$nav = nav();   // Get the navigation menu
 ob_start();
-
 // Retrieve the question data from the database using the ID
-if (isset($_GET['id'])){
+if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
     include 'includes/DatabaseConnection.php';
     $id = $_GET['id'];
     $stmt = $pdo->prepare("SELECT * FROM questions WHERE id = :id");
     $stmt->bindParam(':id', $id);
     $stmt->execute();
     $row = $stmt->fetch();
-    $qtitle = htmlspecialchars($row['title']);
-    $qcontent = htmlspecialchars($row['content']);
-    $qsubmit = htmlspecialchars('Update');
-    $imgsrc = $row['image'];
-    //echo "<img src='http://localhost/coursebt/uploads/silly cart.jpeg' alt='Image' width='64' height='64'>";
-    //Retrieve subjects name from database
-    ob_start();
-    $sub = subjects();
+    if (!$row)
+        include 'layouts/404.html.php';
+    else{
+        $qtitle = htmlspecialchars($row['title']);
+        $qcontent = htmlspecialchars($row['content']);
+        $qsubmit = htmlspecialchars('Update');
+        $imgsrc = $row['image'];
+        ob_start();
+        $sub = subjects();
 
-    include 'layouts/ask.html.php';
-}
+        include 'layouts/ask.html.php'; //use same layout with "ask" page
+    }
+}else
+    include 'layouts/404.html.php';
 if (isset($_POST['qtitle'])){
+    // Update the question data in the database
     $title = $_POST['qtitle'];
     $content = $_POST['qcont'];
     $subject_id = $_POST['subject'];
     $user_id = $_SESSION['userid'];
     $date = date('Y-m-d H:i:s');
 
-    include 'includes/uploadFile.php';
+    include 'includes/uploadFile.php';  //Handle image file upload
     $image_path = '../uploads/' . basename($_FILES["fileToUpload"]["name"]);
     $data = [
         'title' => $title,

@@ -5,7 +5,6 @@ ob_start();
 if (!isset($_SESSION['userid'])){
     include 'layouts/loginbtn.html.php';
 }
-echo $_COOKIE['role'];
 $nav = ob_get_clean();  //display login button
 ob_start();
 if(!(isset($_COOKIE['userid']))){
@@ -16,7 +15,7 @@ if(!(isset($_COOKIE['userid']))){
         try {
             $username_or_email = $_POST['username'];
             $password = md5($_POST['password']);
-            // Check if the input is an email address
+            // Check if the input is an email address or a username
             if (filter_var($username_or_email, FILTER_VALIDATE_EMAIL)) {
                 $sql = "SELECT * FROM users WHERE email = :username_or_email AND password = :password";
             } else {
@@ -38,6 +37,7 @@ if(!(isset($_COOKIE['userid']))){
                 $user_name = $info['name'];
             }
             if ($login_success) {
+                // Set cookies and session variables
                 $_SESSION['userid'] = $userid;
                 $_SESSION['role'] = get_role();
                 $_SESSION['username'] = $user_name;
@@ -46,6 +46,7 @@ if(!(isset($_COOKIE['userid']))){
                 setcookie('username', $user_name, time() + (30 * 24 * 60 * 60), '/', '', true);
                 header("Location: index.php");
             } else {
+                // Display an error message if the login details are incorrect
                 echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         Invalid login details
                     </div>';

@@ -11,7 +11,6 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
-        <a href="#" class="card-link">Forgot Password?</a>
       </div>
     </div>
 </div>

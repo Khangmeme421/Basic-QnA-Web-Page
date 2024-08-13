@@ -47,21 +47,20 @@ function displayQuestion($pdo) {
         // Store the question ID and user ID for future reference
         $questionId = $question['id'];
         $questionUserId = $question['iduser'];
+        // Include the HTML layout for comments
+        include 'layouts/comment.html.php';
+        // Handle deletion of a comment
+        handleCommentDeletion($pdo, $questionId);
+    
+        // Handle addition of a new comment
+        handleCommentAddition($pdo, $questionId, $questionUserId);
+    
+        // Display the answers to the question
+        displayAnswers($pdo, $questionId);
 
         echo '</div>';
-    }
-
-    // Include the HTML layout for comments
-    include 'layouts/comment.html.php';
-
-    // Handle deletion of a comment
-    handleCommentDeletion($pdo, $questionId);
-
-    // Handle addition of a new comment
-    handleCommentAddition($pdo, $questionId, $questionUserId);
-
-    // Display the answers to the question
-    displayAnswers($pdo, $questionId);
+    }else
+        include 'layouts/404.html.php';
 }
 
 /**
@@ -119,11 +118,11 @@ function handleCommentAddition($pdo, $questionId, $questionUserId) {
         }
     }
 }
-if(isset($_GET['subid'])) {
+if(!empty($_GET['subid']) && is_numeric($_GET['subid'])) {
     //displayProblems($pdo, $_GET['subid']);
     $tit = 'Have a problem? Just <a class="text-decoration-none" href="ask.php">ask</a>';
     displayQuestions($pdo, array('subid' => $_GET['subid'],'title' => $tit));
-}elseif(isset($_GET['id'])) {
+}elseif(!empty($_GET['id']) && is_numeric($_GET['id'])) {
     displayquestion($pdo);
     //displayAnswers($pdo, $_GET['id']);
 }

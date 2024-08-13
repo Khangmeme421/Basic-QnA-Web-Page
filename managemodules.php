@@ -3,11 +3,11 @@ $title = 'Manage Modules';
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
-set_cookie()
-$nav = nav();
+set_cookie();   //retrieve data from cookie
+$nav = nav();   // Get the navigation menu
 ob_start();
 if ($_SESSION['role']!='admin')
-    header("Location: index.php");
+    header("Location: index.php");  //redirect user to home page if not loged in as admin
 include 'layouts/newmodules.html.php';
 if (isset($_POST['id'])) {
     $id = htmlspecialchars($_POST['id']);
@@ -27,6 +27,7 @@ try{
     $sql = 'SELECT * FROM `subject`';
     $subjects = $pdo->query($sql);
     foreach ($subjects as $subject){
+        //display subject as editable field based on GET value
         if ($edit == $subject['id']){
             $val = 'value="'.$subject['sub_name'].'"';
             $link = '"managemodules.php"';

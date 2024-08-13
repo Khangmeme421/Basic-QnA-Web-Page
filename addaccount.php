@@ -1,17 +1,16 @@
 <?php
-$title = 'Add Account';
-session_start();
+$title = 'Add Account'; // Set the title of the page
+session_start();    // Start the session
 include 'includes/DatabaseConnection.php';
-include 'includes/dbfunctions.php';
-set_cookie()
-$nav = nav();
-ob_start();
-
+include 'includes/dbfunctions.php'; // Include the database functions file
+set_cookie();    //retrieve data from cookie
+$nav = nav();   // Get the navigation menu
+ob_start();     // Start output buffering
 // Add Account worked but need some optimization
 if($_SESSION['role']=='admin'){
-    include 'layouts/newacc.html.php';
+    include 'layouts/newacc.html.php';  //display layout
     try {
-        if (isset($_GET['success'])){
+        if (isset($_GET['success'])){   //display success message via GET method
             echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         New account added
                     </div>';
@@ -23,14 +22,14 @@ if($_SESSION['role']=='admin'){
             $fullName = $_POST['name'];
             $password = md5($_POST['password']);
             $role = $_POST['role'];
-
+            // Check if the input is an email address or a username
             $stmt = $pdo->prepare('SELECT * FROM `users` WHERE `username` = :username OR `email`= :email');
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $result = $stmt->fetchAll();
             if(empty($result)){
-                // Insert the data into the database
+                // Insert the data into the database if account not exist
                 $stmt = $pdo->prepare('INSERT INTO users (username, email, name, password, role) VALUES (:username, :email, :fullName, :password, :role)');
                 $stmt->bindParam(':username', $username);
                 $stmt->bindParam(':email', $email);
@@ -42,6 +41,7 @@ if($_SESSION['role']=='admin'){
                 header('Location: ' . $_SERVER['PHP_SELF']. '?success=true');
                 exit;
             }else{
+                // Display an error message if the account already exists
                 echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
                         Username or Email existed
                     </div>';
@@ -51,9 +51,8 @@ if($_SESSION['role']=='admin'){
         $output = 'Database error: '. $e->getMessage();
     }
 }else{
-    //redirect user to home page if not loged in as admin
-    header('Location: index.php');
+    header('Location: index.php');  //redirect user to home page if not loged in as admin
 }
 
-$output = ob_get_clean();
-include 'layouts/index.html.php';
+$output = ob_get_clean();   //stop output buffering
+include 'layouts/index.html.php';   //display layout

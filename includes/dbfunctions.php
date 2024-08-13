@@ -26,9 +26,9 @@ function set_cookie(){
  * user's session information when the user returns to the site after being
  * away for a while.
  */
-    $_SESSION['userid'] = $_COOKIE['userid'];
-    $_SESSION['role'] = $_COOKIE['role'];
-    $_SESSION['username'] = $_COOKIE['username'];
+    $_SESSION['userid'] = !empty($_COOKIE['userid']) ? $_COOKIE['userid'] : null;
+    $_SESSION['role'] = !empty($_COOKIE['role']) ? $_COOKIE['role'] : null;
+    $_SESSION['username'] = !empty($_COOKIE['username']) ? $_COOKIE['username'] : null;
 }
 // delete a $target in $table 
 function delete($table,$target){
