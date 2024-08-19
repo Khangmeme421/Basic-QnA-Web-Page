@@ -3,8 +3,8 @@ $title = 'Home';
 session_start();
 include 'includes/DatabaseConnection.php';
 include 'includes/dbfunctions.php';
-set_cookie();
-$nav = nav();
+set_cookie();   //Retrieve data from cookie
+$nav = nav();   // Get the navigation menu
 ob_start();
 //handling upvote
 if (isset($_POST['upvote']) && isset($_SESSION['userid'])) {
@@ -48,6 +48,7 @@ function displayQuestion($pdo) {
         $questionId = $question['id'];
         $questionUserId = $question['iduser'];
         // Include the HTML layout for comments
+        echo '</div>';
         include 'layouts/comment.html.php';
         // Handle deletion of a comment
         handleCommentDeletion($pdo, $questionId);
@@ -57,8 +58,6 @@ function displayQuestion($pdo) {
     
         // Display the answers to the question
         displayAnswers($pdo, $questionId);
-
-        echo '</div>';
     }else
         include 'layouts/404.html.php';
 }

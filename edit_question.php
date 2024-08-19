@@ -14,16 +14,15 @@ if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
     $stmt->bindParam(':id', $id);
     $stmt->execute();
     $row = $stmt->fetch();
-    if (!$row)
-        include 'layouts/404.html.php';
+    if (!$row ||$row['iduser'] != $_SESSION['userid'])
+        include 'layouts/404.html.php'; //show 404 page, whether page not found or not being the current user
     else{
         $qtitle = htmlspecialchars($row['title']);
         $qcontent = htmlspecialchars($row['content']);
         $qsubmit = htmlspecialchars('Update');
         $imgsrc = $row['image'];
         ob_start();
-        $sub = subjects();
-
+        $sub = subjects();  //create subject drop down list
         include 'layouts/ask.html.php'; //use same layout with "ask" page
     }
 }else

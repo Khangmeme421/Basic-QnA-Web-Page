@@ -8,10 +8,9 @@ function get_role(){
         if (isset($_SESSION['userid'])) {
             $userid = (int)$_SESSION['userid'];
             $sql = "SELECT `role` FROM `users` WHERE id=$userid";
-            $user = $pdo->query($sql);
-            foreach($user as $row){
-                $role = $row['role'];
-            }
+            $stmt = $pdo->query($sql);
+            $row = $stmt->fetch();
+            $role = $row['role'];
         }
     }catch (PDOException $e){
         $role = NULL;
@@ -65,7 +64,7 @@ function nav(){
     if (isset($_SESSION['role'])){
         include 'layouts/student.html.php'; //display tabs for every user
         if ($_SESSION['role']=='admin'){
-            include 'layouts/ad.html.php';  //display dropdown menu for admin users
+            include 'layouts/admin.html.php';  //display dropdown menu for admin users
         }
         include 'layouts/user.html.php';    //display dropdown menu for every user
     }else{
