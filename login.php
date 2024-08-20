@@ -45,9 +45,9 @@ if(!(isset($_COOKIE['userid']))){
                 $encrypted_username = encrypt_data($user_name, $encryption_key);
 
                 // Set decoy cookies
-                setcookie('userid', 'qQd3vPm7LS', time() + (30 * 24 * 60 * 60), '/', '', true, true);
-                setcookie('role', 'EAxgOynY2y', time() + (30 * 24 * 60 * 60), '/', '', true, true);
-                setcookie('username', 'm0j8SK4JRU', time() + (30 * 24 * 60 * 60), '/', '', true, true);
+                setcookie('pusbyciU9MbXjJEfpJwjv9BhL', 'goHTNH1LdvXxep2fYlFSQqnaNQ8UABge', time() + (30 * 24 * 60 * 60), '/', '', true, true);
+                setcookie('RSWHBmf47GvoLh7omLXsMKquv', '4idszNpbCwD0yQmxvLPJRCkLhDaTPSMk', time() + (30 * 24 * 60 * 60), '/', '', true, true);
+                setcookie('jomBGmEz4by39DgRSrFq9P19q', 'kDjetuz80kFZJnProN5fXk4JTDfZOnW6', time() + (30 * 24 * 60 * 60), '/', '', true, true);
 
                 // Set real encrypted cookies
                 setcookie('E6PgCCAHVeHJB4u', $encrypted_userid, time() + (30 * 24 * 60 * 60), '/', '', true, true);
