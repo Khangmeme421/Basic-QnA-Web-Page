@@ -34,9 +34,7 @@ if (!isset($_SESSION['userid'])) {
             $stmt = $pdo->prepare("INSERT INTO questions (title, content, idsubject, iduser, date_create, image) VALUES (:title, :content, :idsubject, :iduser, :date_create, :image)");
             $stmt->execute($data);
             //Send success message to user
-            echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                        Your post created successfully
-                    </div>';
+            create_Alert('success', 'Your post created successfully');
         }
     }catch (PDOException $e){
         $output= 'Database error: ' . $e->getMessage();

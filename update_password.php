@@ -25,14 +25,10 @@ if(isset($_SESSION['userid'])){
             // Check if the current password is correct
             if ($current_password != $hashed_password) {
                 // Current password is incorrect
-                echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                        Current password is incorrect
-                    </div>';
+                create_Alert('warning', 'Current password is incorrect');
             } elseif ($new_password !== $c_password) {
                 // New password and confirm password don't match
-                echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                        New password and confirm password mismatch
-                    </div>';
+                create_Alert('warning', 'New password and confirm password mismatch');
             } else {
                 // Update the password
                 $stmt = $pdo->prepare("UPDATE users SET password = :password WHERE id = :id");
@@ -41,9 +37,7 @@ if(isset($_SESSION['userid'])){
                 $stmt->execute();
 
                 // Password updated successfully
-                echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                Password updated successfully
-                    </div>';
+                create_Alert('success', 'Password updated successfully');
             }
         }
     } catch (PDOException $e) {

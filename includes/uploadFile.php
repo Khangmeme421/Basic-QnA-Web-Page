@@ -17,10 +17,7 @@ $target_dir = "uploads/";
        $uploadOk = 1;
      } else {
        //echo "File is not an image.";
-       
-       echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-              File is not an image
-                    </div>';
+       create_Alert('warning', 'File is not an image');
        $uploadOk = 0;
      }
    }
@@ -47,9 +44,7 @@ $target_dir = "uploads/";
 
    // Check file size
    if ($_FILES["fileToUpload"]["size"] > 5000000) {
-    echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-            Sorry, your file is too large
-                    </div>';
+    create_Alert('warning', 'File is too large');
      //echo "Sorry, your file is too large.";
      $uploadOk = 0;
    }
@@ -58,34 +53,21 @@ $target_dir = "uploads/";
    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
    && $imageFileType != "gif" ) {
      //echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-     echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-        Sorry, only JPG, JPEG, PNG & GIF files are allowed
-                    </div>';
+     create_Alert('warning', 'Only JPG, JPEG, PNG & GIF files are allowed');
      $uploadOk = 0;
    }
    
    // Check if $uploadOk is set to 0 by an error
    if ($uploadOk == 0) {
      //echo "Sorry, your file was not uploaded.";
-     echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-              Sorry, your file was not uploaded
-                    </div>';
+     create_Alert('warning', 'Sorry, your file was not uploaded');
    // if everything is ok, try to upload file
    } else {
      if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-       //echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
-       echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                        Your file has been uploaded
-                    </div>';
+       //inform user that the image file has been uploaded
+       create_Alert('success', 'Your file has been uploaded');
      } else {
        //echo "Sorry, there was an error uploading your file.";
-       echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-        Sorry, there was an error uploading your file
-                    </div>';
+       create_Alert('warning', 'Sorry, there was an error uploading your file');
      }
    }
-echo '<script>
-        setTimeout(function() {
-            document.getElementById("alert").remove();
-        }, 4000);
-      </script>';

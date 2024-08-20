@@ -47,15 +47,12 @@ if(!(isset($_COOKIE['userid']))){
                 header("Location: index.php");
             } else {
                 // Display an error message if the login details are incorrect
-                echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                        Invalid login details
-                    </div>';
+                create_Alert('warning', 'Invalid login details');
             }
         } catch (PDOException $e) {
             $output = 'Database error: '. $e->getMessage();
         }
     }
-
 }else{
     header("Location: index.php");
 }

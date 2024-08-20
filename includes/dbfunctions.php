@@ -96,7 +96,20 @@ function count_data($table,$column,$target){
     $stmt->execute();
     return $stmt->fetchColumn();
 }
-
+/**
+ * Create alert message
+ *
+ * @param string $type Type of alert message, can be "success" or "warning"
+ * @param string $message The message to be displayed
+ */
+function createAlert($type, $message) {
+    // Define the class for the alert message
+    $alertClass = ($type == 'success') ? 'alert-success' : 'alert-warning';
+    // Create the alert message
+    echo "<div class=\"alert $alertClass d-flex justify-content-center align-items-center mt-5 ms-5\" role=\"alert\" style=\"max-width: 18rem;\" id=\"alert\">
+            $message
+          </div>";
+}
 // manage upvote
 function upvote($idQuestion,$idUser){
     include 'includes/DatabaseConnection.php';
@@ -286,13 +299,9 @@ function manageSubject($pdo, $name, $id = null, $action = 'insert') {
             $stmt = $pdo->prepare("INSERT INTO `subject` SET `sub_name` = :name");
             $stmt->bindParam(':name', $name);
             $stmt->execute();
-            echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 ms-5" role="alert" style="max-width: 18rem;" id="alert">
-                    New subject created successfully
-                </div>';
+            createAlert('success','New subject created successfully');
         } else {
-            echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 ms-5" role="alert" style="max-width: 18rem;" id="alert">
-                    Subject already exists
-                </div>';
+            createAlert('Subject already exists', 'warning');
         }
     } elseif ($action == 'update') {
         if (empty($result)) {
@@ -302,9 +311,7 @@ function manageSubject($pdo, $name, $id = null, $action = 'insert') {
             $stmt->execute();
             header("Location: managemodules.php");
         } else {
-            echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 ms-5" role="alert" style="max-width: 18rem;" id="alert">
-                    Subject already exists
-                </div>';
+            createAlert('warning','Subject already exists');
         }
     }
 }

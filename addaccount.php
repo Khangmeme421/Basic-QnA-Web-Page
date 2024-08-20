@@ -11,9 +11,7 @@ if($_SESSION['role']=='admin'){
     include 'layouts/newacc.html.php';  //display layout
     try {
         if (isset($_GET['success'])){   //display success message via GET method
-            echo '<div class="alert alert-success d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                        New account added
-                    </div>';
+            create_Alert('success', 'New account added');
         }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Retrieve the form data
@@ -42,9 +40,7 @@ if($_SESSION['role']=='admin'){
                 exit;
             }else{
                 // Display an error message if the account already exists
-                echo '<div class="alert alert-warning d-flex justify-content-center align-items-center mt-5 mx-auto" role="alert" style="max-width: 18rem;" id="alert">
-                        Username or Email existed
-                    </div>';
+                create_Alert('warning', 'Username or Email existed');
                 }
         }
     } catch (PDOException $e) {

@@ -118,12 +118,12 @@ function handleCommentAddition($pdo, $questionId, $questionUserId) {
     }
 }
 if(!empty($_GET['subid']) && is_numeric($_GET['subid'])) {
-    //displayProblems($pdo, $_GET['subid']);
+    //display all questions
     $tit = 'Have a problem? Just <a class="text-decoration-none" href="ask.php">ask</a>';
     displayQuestions($pdo, array('subid' => $_GET['subid'],'title' => $tit));
 }elseif(!empty($_GET['id']) && is_numeric($_GET['id'])) {
+    //display question with valid ID
     displayquestion($pdo);
-    //displayAnswers($pdo, $_GET['id']);
 }
 else {
     //use var name != $title to avoid conflict in the code
