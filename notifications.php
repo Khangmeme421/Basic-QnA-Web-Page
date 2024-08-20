@@ -10,8 +10,8 @@ if (!isset($_SESSION['userid'])) {
     header('Location: index.php');  //Redirect to home page if not logged in
 }else{
     // Not optimized delete fucntion
-    if (isset($_POST['del'])) {
-        $id = htmlspecialchars($_POST['del']);  // Get the ID of the notification to delete
+    if (isset($_POST['id'])) {
+        $id = htmlspecialchars($_POST['id']);  // Get the ID of the notification to delete
         delete('notifications',$id);    // Delete the notification
         header('Location: notifications.php');  //Reload the page
     }

@@ -17,6 +17,19 @@ function get_role(){
     }
     return $role;
 }
+//encypt cookies
+function encrypt_data($data, $key) {
+    $encryption_key = base64_decode($key);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted_data = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return base64_encode($encrypted_data . '::' . $iv);
+}
+//decrypt cookies
+function decrypt_data($data, $key) {
+    $encryption_key = base64_decode($key);
+    list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+}
 
 //generate cookie on user back to the site
 function set_cookie(){
@@ -26,9 +39,11 @@ function set_cookie(){
  * user's session information when the user returns to the site after being
  * away for a while.
  */
-    $_SESSION['userid'] = !empty($_COOKIE['userid']) ? $_COOKIE['userid'] : null;
-    $_SESSION['role'] = !empty($_COOKIE['role']) ? $_COOKIE['role'] : null;
-    $_SESSION['username'] = !empty($_COOKIE['username']) ? $_COOKIE['username'] : null;
+    $encryption_key = 'b1JbS2v7IhX2uVj3K6PgUvO4PiRxV2VzQ5Uw1OjL3uQ'; //Encryption key
+    // Decrypt the data
+    $_SESSION['userid'] = !empty($_COOKIE['E6PgCCAHVeHJB4u']) ? decrypt_data($_COOKIE['E6PgCCAHVeHJB4u'], $encryption_key) : null;
+    $_SESSION['role'] = !empty($_COOKIE['ClfSjOKzZTKgony']) ? decrypt_data($_COOKIE['ClfSjOKzZTKgony'], $encryption_key) : null;
+    $_SESSION['username'] = !empty($_COOKIE['Ei1yiRbEpidLEc5']) ? decrypt_data($_COOKIE['Ei1yiRbEpidLEc5'], $encryption_key) : null;
 }
 // delete a $target in $table 
 function delete($table,$target){

@@ -37,13 +37,22 @@ if(!(isset($_COOKIE['userid']))){
                 $user_name = $info['name'];
             }
             if ($login_success) {
-                // Set cookies and session variables
-                $_SESSION['userid'] = $userid;
-                $_SESSION['role'] = get_role();
-                $_SESSION['username'] = $user_name;
-                setcookie('userid', $userid, time() + (30 * 24 * 60 * 60), '/', '', true);
-                setcookie('role', get_role(), time() + (30 * 24 * 60 * 60), '/', '', true);
-                setcookie('username', $user_name, time() + (30 * 24 * 60 * 60), '/', '', true);
+                $encryption_key = 'b1JbS2v7IhX2uVj3K6PgUvO4PiRxV2VzQ5Uw1OjL3uQ'; //Encryption key
+    
+                // Encrypt the data
+                $encrypted_userid = encrypt_data($userid, $encryption_key);
+                $encrypted_role = encrypt_data(get_role(), $encryption_key);
+                $encrypted_username = encrypt_data($user_name, $encryption_key);
+
+                // Set decoy cookies
+                setcookie('userid', 'qQd3vPm7LS', time() + (30 * 24 * 60 * 60), '/', '', true, true);
+                setcookie('role', 'EAxgOynY2y', time() + (30 * 24 * 60 * 60), '/', '', true, true);
+                setcookie('username', 'm0j8SK4JRU', time() + (30 * 24 * 60 * 60), '/', '', true, true);
+
+                // Set real encrypted cookies
+                setcookie('E6PgCCAHVeHJB4u', $encrypted_userid, time() + (30 * 24 * 60 * 60), '/', '', true, true);
+                setcookie('ClfSjOKzZTKgony', $encrypted_role, time() + (30 * 24 * 60 * 60), '/', '', true, true);
+                setcookie('Ei1yiRbEpidLEc5', $encrypted_username, time() + (30 * 24 * 60 * 60), '/', '', true, true);
                 header("Location: index.php");
             } else {
                 // Display an error message if the login details are incorrect
