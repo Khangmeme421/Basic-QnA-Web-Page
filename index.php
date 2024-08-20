@@ -61,6 +61,23 @@ function displayQuestion($pdo) {
     }else
         include 'layouts/404.html.php';
 }
+/**
+ * Handles the deletion of a post.
+ * @param int $postID The ID of the post.
+ */
+function handlePostDeletion($pdo) {
+    if (isset($_POST['id'])) {
+        $postID = htmlspecialchars($_POST['id']);
+        delete('questions', $postID);
+        //inform user if admin delete their post
+        if (isset($_POST['iduser'])) {
+            $content = 'Admin deleted your post';
+            admin_delete($_POST['iduser'], $content);
+        }
+
+        header("Location: index.php?id=$questionId");
+    }
+}
 
 /**
  * Handles the deletion of a comment.
@@ -73,7 +90,7 @@ function handleCommentDeletion($pdo, $questionId) {
 
         if (isset($_POST['iduser'])) {
             $content = 'Admin deleted your comment';
-            adminDelete($_POST['iduser'], $content);
+            admin_delete($_POST['iduser'], $content);
         }
 
         header("Location: index.php?id=$questionId");
@@ -129,6 +146,8 @@ else {
     //use var name != $title to avoid conflict in the code
     $tit = 'Have a problem? Just <a class="text-decoration-none" href="ask.php">ask</a>';
     displayQuestions($pdo, array('title' => $tit));
+    //Handle post delete
+    handlePostDeletion($pdo);
 }
 $output = ob_get_clean();
 include 'layouts/index.html.php';
