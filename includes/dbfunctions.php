@@ -17,6 +17,7 @@ function get_role(){
     }
     return $role;
 }
+
 //generate cookie on user back to the site
 function set_cookie(){
 /**
@@ -102,7 +103,7 @@ function count_data($table,$column,$target){
  * @param string $type Type of alert message, can be "success" or "warning"
  * @param string $message The message to be displayed
  */
-function createAlert($type, $message) {
+function create_Alert($type, $message) {
     // Define the class for the alert message
     $alertClass = ($type == 'success') ? 'alert-success' : 'alert-warning';
     // Create the alert message
@@ -232,18 +233,18 @@ function displayAnswers(PDO $pdo, int $idQuestion): void
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['idQuestion' => $idQuestion]);
 
+    // Check if the current comment is being edited
+    if (isset($_POST['module'])) {
+        $name = $_POST['module'];
+        $idcmt = $_GET['answer_id'];
+        $stmt = $pdo->prepare("UPDATE `answers` SET `content` = :name WHERE `id` = :id");
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':id', $idcmt);
+        $stmt->execute();
+        header("Location: index.php?id=" . $idQuestion);
+    }
     // Loop through the comments and display them
     foreach ($stmt->fetchAll() as $comment) {
-        // Check if the current comment is being edited
-        if (isset($_POST['module'])) {
-            $name = $_POST['module'];
-            $idcmt = $_GET['answer_id'];
-            $stmt = $pdo->prepare("UPDATE `answers` SET `content` = :name WHERE `id` = :id");
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':id', $idcmt);
-            $stmt->execute();
-            header("Location: index.php?id=" . $idQuestion);
-        }
 
         // Check if the current comment belongs to the user
         $stmt = $pdo->prepare("SELECT iduser FROM answers WHERE id = :answer_id");
@@ -299,9 +300,9 @@ function manageSubject($pdo, $name, $id = null, $action = 'insert') {
             $stmt = $pdo->prepare("INSERT INTO `subject` SET `sub_name` = :name");
             $stmt->bindParam(':name', $name);
             $stmt->execute();
-            createAlert('success','New subject created successfully');
+            create_Alert('success','New subject created successfully');
         } else {
-            createAlert('Subject already exists', 'warning');
+            create_Alert('Subject already exists', 'warning');
         }
     } elseif ($action == 'update') {
         if (empty($result)) {
@@ -311,7 +312,7 @@ function manageSubject($pdo, $name, $id = null, $action = 'insert') {
             $stmt->execute();
             header("Location: managemodules.php");
         } else {
-            createAlert('warning','Subject already exists');
+            create_Alert('warning','Subject already exists');
         }
     }
 }

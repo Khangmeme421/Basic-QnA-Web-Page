@@ -13,7 +13,9 @@ if (!isset($_SESSION['userid'])) {
     include 'layouts/ask.html.php';
     // Get form data
     try{
-        if (isset($_POST['qtitle'])){
+        if (isset($_POST['subject']) && $_POST['subject'] == "Choose a subject")
+            create_Alert('warning', 'Please choose a subject');
+        elseif (isset($_POST['qtitle'])){
             //basic post data
             $title = $_POST['qtitle'];
             $content = $_POST['qcont'];
@@ -21,7 +23,9 @@ if (!isset($_SESSION['userid'])) {
             $user_id = $_SESSION['userid'];
             $date = date('Y-m-d H:i:s');
             //if post has image
-            include 'includes/uploadFile.php';
+            if (!empty($_FILES["fileToUpload"]["name"])){
+                include 'includes/uploadFile.php';
+            }
             $image_path = '../uploads/' . basename($_FILES["fileToUpload"]["name"]);
             $data = [
                 'title' => $title,
@@ -35,8 +39,9 @@ if (!isset($_SESSION['userid'])) {
             $stmt->execute($data);
             //Send success message to user
             create_Alert('success', 'Your post created successfully');
+            }
         }
-    }catch (PDOException $e){
+    catch (PDOException $e){
         $output= 'Database error: ' . $e->getMessage();
     }
 }
