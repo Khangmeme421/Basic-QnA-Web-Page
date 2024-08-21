@@ -17,17 +17,34 @@ function get_role(){
     }
     return $role;
 }
-//encypt cookies
+/**
+ * Encrypt a string using AES-256-CBC encryption.
+ * @param string $data     The string to encrypt.
+ * @param string $key      The key to use for encryption.
+ * @return string          The encrypted string.
+ */
 function encrypt_data($data, $key) {
     $encryption_key = base64_decode($key);
+    // Generate a random initialization vector (IV) for AES-256-CBC encryption
     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    // Encrypt the data
     $encrypted_data = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    // Return the encrypted data with the IV (for decryption)
     return base64_encode($encrypted_data . '::' . $iv);
 }
-//decrypt cookies
+/**
+ * Decrypts a string that was encrypted using the AES-256-CBC encryption algorithm.
+ * @param string $data The encrypted string to decrypt.
+ * @param string $key The key used for encryption.
+ * @return string The decrypted string.
+ */
 function decrypt_data($data, $key) {
+    // Decode the encryption key from base64
     $encryption_key = base64_decode($key);
+    // Split the encrypted data and initialization vector from the base64-decoded data
     list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
+    // Decrypt the data using the AES-256-CBC algorithm
+    // The 0 as the fourth parameter specifies PKCS#7 padding
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
 }
 

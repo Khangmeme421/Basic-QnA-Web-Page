@@ -7,7 +7,7 @@ if (!isset($_SESSION['userid'])){
 }
 $nav = ob_get_clean();  //display login button
 ob_start();
-if(!(isset($_COOKIE['userid']))){
+if(!(isset($_COOKIE['E6PgCCAHVeHJB4u']))){
     include 'layouts/login.html.php';   //display layout
     include 'includes/DatabaseConnection.php';
     include 'includes/dbfunctions.php';
@@ -38,8 +38,8 @@ if(!(isset($_COOKIE['userid']))){
             }
             if ($login_success) {
                 $encryption_key = 'b1JbS2v7IhX2uVj3K6PgUvO4PiRxV2VzQ5Uw1OjL3uQ'; //Encryption key
-    
                 // Encrypt the data
+                $_SESSION['userid'] = $userid;
                 $encrypted_userid = encrypt_data($userid, $encryption_key);
                 $encrypted_role = encrypt_data(get_role(), $encryption_key);
                 $encrypted_username = encrypt_data($user_name, $encryption_key);
