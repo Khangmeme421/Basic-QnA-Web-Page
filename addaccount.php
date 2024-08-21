@@ -8,7 +8,7 @@ $nav = nav();   // Get the navigation menu
 ob_start();     // Start output buffering
 // Add Account worked but need some optimization
 if($_SESSION['role']=='admin'){
-    include 'layouts/newacc.html.php';  //display layout
+    include 'layouts/addaccount.html.php';  //display layout
     try {
         if (isset($_GET['success'])){   //display success message via GET method
             create_Alert('success', 'New account added');
